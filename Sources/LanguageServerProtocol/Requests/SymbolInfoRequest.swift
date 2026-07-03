@@ -135,6 +135,11 @@ public struct SymbolDetails: ResponseType, Hashable {
   /// This property only applies to Swift symbols.
   public var systemModule: ModuleInfo?
 
+  /// A human-readable string representation of the symbol at the given location, eg. a variable's type.
+  ///
+  /// This property only applies to Swift symbols.
+  public var typeName: String?
+
   public init(
     name: String?,
     containerName: String?,
@@ -144,7 +149,8 @@ public struct SymbolDetails: ResponseType, Hashable {
     isDynamic: Bool?,
     isSystem: Bool?,
     receiverUsrs: [String]?,
-    systemModule: ModuleInfo?
+    systemModule: ModuleInfo?,
+    typeName: String?
   ) {
     self.name = name
     self.containerName = containerName
@@ -155,5 +161,6 @@ public struct SymbolDetails: ResponseType, Hashable {
     self.isSystem = isSystem
     self.receiverUsrs = receiverUsrs
     self.systemModule = systemModule
+    self.typeName = typeName
   }
 }
