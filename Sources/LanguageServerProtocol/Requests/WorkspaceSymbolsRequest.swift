@@ -156,6 +156,13 @@ public struct WorkspaceSymbol: ResponseType, Hashable {
   /// workspace symbol request and a workspace symbol resolve request.
   public var data: LSPAny?
 
+  /// The `data` interpreted as `SourceKitWorkspaceSymbolData`, if it is a SourceKit-LSP workspace symbol.
+  ///
+  /// **(LSP Extension)**
+  public var sourceKitData: SourceKitWorkspaceSymbolData? {
+    SourceKitWorkspaceSymbolData(fromLSPAny: data)
+  }
+
   public init(
     name: String,
     kind: SymbolKind,
@@ -170,5 +177,27 @@ public struct WorkspaceSymbol: ResponseType, Hashable {
     self.containerName = containerName
     self.location = location
     self.data = data
+  }
+}
+
+/// SourceKit-LSP-specific metadata stored in `WorkspaceSymbol.data`, used to resolve and display symbols
+/// that live in a generated Swift interface.
+///
+/// **(LSP Extension)**
+public struct SourceKitWorkspaceSymbolData: LSPAnyCodable, Codable, Hashable, Sendable {
+  /// The USR of the symbol, used by `workspaceSymbol/resolve` to find the symbol's position within the
+  /// generated interface.
+  public var usr: String
+
+  /// The `.swiftinterface`/`.swiftmodule` file the symbol is declared in.
+  public var interfaceURI: DocumentURI?
+
+  /// The fully-qualified module name recorded in the index (e.g. `Swift.String`).
+  public var moduleName: String?
+
+  public init(usr: String, interfaceURI: DocumentURI?, moduleName: String?) {
+    self.usr = usr
+    self.interfaceURI = interfaceURI
+    self.moduleName = moduleName
   }
 }
